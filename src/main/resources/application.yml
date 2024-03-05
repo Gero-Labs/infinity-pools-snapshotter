@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: ${MODE:development}
+
+snapshotter:
+  provider:
+    network: mainnet
+    provider-type: koios
+    provider-token: eyJ0eXAiOiJKV1QiLCJ0aWVyIjoyLCJhbGciOiJIUzI1NiJ9.eyJhZGRyIjoic3Rha2UxdXltd2t6MnpsbjQwMDU3NGR1cjdkcnhmcHB2amFxbWNhNnc5OGswcW1scjc0bmcyZjVxY2wiLCJleHAiOjE3MDc3Mzk4NDYsInRpZXIiOjJ9.y_wfJEur0eFmcWnDnliHENHE7GjdXsxyCpBCfBQqWPE
+
+springdoc:
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+  swagger-ui:
+    path: /api-docs
