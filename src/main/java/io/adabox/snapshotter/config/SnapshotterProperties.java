@@ -10,6 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 import static com.bloxbean.cardano.client.backend.koios.Constants.*;
 
 @Data
@@ -18,9 +20,10 @@ import static com.bloxbean.cardano.client.backend.koios.Constants.*;
 public class SnapshotterProperties {
 
     private Provider provider;
+    private List<String> supportedPolicies;
 
     @Bean
-    public BackendService provider() {
+    public BackendService backendService() {
         if (provider.getProviderType() == ProviderType.BLOCKFROST) {
             return new BFBackendService(resolveBlockfrostBaseUrl(), provider.getProviderToken());
         } else if (provider.getProviderType() == ProviderType.KOIOS) {
@@ -55,14 +58,14 @@ public class SnapshotterProperties {
 
     @Data
     @NoArgsConstructor
-    private static class Provider {
+    public static class Provider {
 
         private ProviderType providerType;
         private String providerToken;
         private Network network;
     }
 
-    private enum ProviderType {
+    public enum ProviderType {
 
         KOIOS,
         BLOCKFROST

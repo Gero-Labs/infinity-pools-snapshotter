@@ -1,5 +1,6 @@
 package io.adabox.snapshotter.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,8 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SnapshotResponse {
+public class Snapshot {
 
     @Schema(example = "Error Creating Snapshot")
     private String message;
@@ -21,4 +23,9 @@ public class SnapshotResponse {
 
     @Schema(example = "queued")
     private SnapshotRequestStatus status;
+
+    @Schema(hidden = true)
+    private AssetListResponse assetListResponse;
+
+    private Long snapshotTime;
 }

@@ -1,3 +1,11 @@
+server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  http2:
+    enabled: true
+
 spring:
   profiles:
     active: ${MODE:development}
@@ -5,11 +13,13 @@ spring:
 snapshotter:
   provider:
     network: mainnet
-    provider-type: koios
-    provider-token: eyJ0eXAiOiJKV1QiLCJ0aWVyIjoyLCJhbGciOiJIUzI1NiJ9.eyJhZGRyIjoic3Rha2UxdXltd2t6MnpsbjQwMDU3NGR1cjdkcnhmcHB2amFxbWNhNnc5OGswcW1scjc0bmcyZjVxY2wiLCJleHAiOjE3MDc3Mzk4NDYsInRpZXIiOjJ9.y_wfJEur0eFmcWnDnliHENHE7GjdXsxyCpBCfBQqWPE
+    provider-type: blockfrost
+    provider-token: mainnetm36ACcjnFwOPUhthwqO34S3VCHg7wk0d
+  supported-policies: 8e51398904a5d3fc129fbf4f1589701de23c7824d5c90fdb9490e15a
 
 springdoc:
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
   swagger-ui:
     path: /api-docs
+

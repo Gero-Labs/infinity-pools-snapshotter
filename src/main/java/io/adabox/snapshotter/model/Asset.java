@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Asset {
 
     @Schema(example = "400")
-    private Long amount;
+    private String amount;
     private String assetName;
     @Schema(minLength = 59, maxLength = 64, example = "stake123456789012345678901234567890123456789012345678901234")
     private String stakeAddress;
