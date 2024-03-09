@@ -29,13 +29,13 @@ public class SnapshotterService {
 
     public Snapshot getPolicySnapshot(String policyId) {
         long timestamp = System.currentTimeMillis();
-        String id = UUID.nameUUIDFromBytes(String.valueOf(Pair.of(policyId, DateUtils.convertToDate(timestamp)).hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
+        String id = UUID.nameUUIDFromBytes(String.valueOf(Pair.of(policyId, DateUtils.convertToDateStr(timestamp)).hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
         return Objects.requireNonNull(cacheManager.getCache("snapshots")).get(id, Snapshot.class);
     }
 
     public Snapshot createPolicySnapshot(String policyId) {
         long timestamp = System.currentTimeMillis();
-        String id = UUID.nameUUIDFromBytes(String.valueOf(Pair.of(policyId, DateUtils.convertToDate(timestamp)).hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
+        String id = UUID.nameUUIDFromBytes(String.valueOf(Pair.of(policyId, DateUtils.convertToDateStr(timestamp)).hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
         Snapshot snapshot = Objects.requireNonNull(cacheManager.getCache("snapshots")).get(id, Snapshot.class);
         if (snapshot == null) {
             return snapshotRequestPublisher.publishSnapshot(id, policyId, timestamp);

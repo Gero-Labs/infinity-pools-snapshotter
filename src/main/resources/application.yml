@@ -15,11 +15,13 @@ snapshotter:
     network: mainnet
     provider-type: blockfrost
     provider-token: mainnetm36ACcjnFwOPUhthwqO34S3VCHg7wk0d
-  supported-policies: 8e51398904a5d3fc129fbf4f1589701de23c7824d5c90fdb9490e15a
+  supported-policies: ${SUPPORTED_POLICIES:8e51398904a5d3fc129fbf4f1589701de23c7824d5c90fdb9490e15a}
 
 springdoc:
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
   swagger-ui:
     path: /api-docs
+    layout: BaseLayout
+    operationsSorter: method
 
