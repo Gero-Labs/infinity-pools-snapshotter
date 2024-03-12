@@ -25,12 +25,12 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         OpenAPI openApi = new OpenAPI();
         if (profile.equalsIgnoreCase("production")) {
-            openApi = openApi.servers(List.of(new Server().url("https://apollo.gerowallet.io")));
+            openApi = openApi.servers(List.of(new Server().url("https://hera.gerowallet.io")));
         }
         return openApi.components(new Components())
                 .info(new Info().title("Gero Snapshotter")
                         .version(Main.class.getPackage().getImplementationVersion())
                         .description("Powered By adabox.io")
-                        .license(new License().name("Apache 2.0").url("https://apollo.gerowallet.io/")));
+                        .license(new License().name("Apache 2.0").url("https://hera.gerowallet.io/")));
     }
 }

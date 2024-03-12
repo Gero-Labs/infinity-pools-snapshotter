@@ -4,8 +4,6 @@ WORKDIR /opt
 
 EXPOSE 8080/tcp
 
-COPY target/*.jar /opt/snapshotter/lib/snapshotter.jar
+COPY target/snapshotter.jar ./snapshotter.jar
 
-USER spring
-
-ENTRYPOINT ["java", "-jar", "cardano-shield-api/snapshotter.jar"]
+ENTRYPOINT ["java", "-jar", "snapshotter.jar"]
