@@ -1,9 +1,6 @@
 package io.adabox.snapshotter.controller;
 
-import io.adabox.snapshotter.model.Asset;
-import io.adabox.snapshotter.model.AssetListResponse;
-import io.adabox.snapshotter.model.ErrorResponse;
-import io.adabox.snapshotter.model.Snapshot;
+import io.adabox.snapshotter.model.*;
 import io.adabox.snapshotter.service.SnapshotterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,7 +37,7 @@ public class SnapshotterController {
                                                               @Schema(description = "Stake address to filter Response on", example = "stake123456789012345678901234567890123456789012345678901234")
                                                               String stakeAddress) {
         Snapshot snapshot = snapshotterService.getPolicySnapshot(policyId);
-        if (snapshot == null) {
+        if (snapshot == null || snapshot.getStatus() != SnapshotRequestStatus.complete) {
             return ResponseEntity.notFound().build();
         }
         AssetListResponse assetListResponse = snapshot.getAssetListResponse();

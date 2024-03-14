@@ -41,6 +41,7 @@ public class SnapshotRequestListener {
         if (assetAddresses == null) {
             assetListResponse.setStatus(SnapshotStatus.no_snapshot);
             tokensFetcher.fetch();
+            assetAddresses = tokensFetcher.getAssetAddressesByPolicyId(snapshotRequest.getTimestamp(), snapshotRequest.getPolicyId());
         }
         List<Asset> assets = new ArrayList<>();
         for (io.adabox.snapshotter.model.AssetAddress assetAddress : assetAddresses) {
