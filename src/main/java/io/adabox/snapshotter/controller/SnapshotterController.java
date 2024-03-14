@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class SnapshotterController {
         if (snapshot == null || snapshot.getStatus() != SnapshotRequestStatus.complete) {
             return ResponseEntity.notFound().build();
         }
-        AssetListResponse assetListResponse = snapshot.getAssetListResponse();
+        AssetListResponse assetListResponse = SerializationUtils.clone(snapshot.getAssetListResponse());
         if (StringUtils.isNotBlank(stakeAddress)) {
             List<Asset> assets = assetListResponse.getAssets().stream().filter(asset -> asset.getStakeAddress().equalsIgnoreCase(stakeAddress)).toList();
             assetListResponse.setAssets(assets);
