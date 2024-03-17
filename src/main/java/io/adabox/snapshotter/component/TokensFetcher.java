@@ -62,7 +62,7 @@ public class TokensFetcher {
 
     public boolean retrieveAssetAddressesData(long time, String policyId, int tryCount) {
         try {
-            if (tryCount >= MAX_RETRIES) {
+            if (tryCount <= MAX_RETRIES) {
                 Result<List<PolicyAsset>> policyAssetsResult = assetService.getAllPolicyAssets(policyId);
                 if (!policyAssetsResult.isSuccessful()) {
                     log.error("ERROR: {}", policyAssetsResult.getResponse());
