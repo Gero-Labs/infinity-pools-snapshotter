@@ -40,8 +40,12 @@ public class SnapshotRequestListener {
         List<io.adabox.snapshotter.model.AssetAddress> assetAddresses = tokensFetcher.getAssetAddressesByPolicyId(snapshotRequest.getTimestamp(), snapshotRequest.getPolicyId());
         if (assetAddresses == null) {
             assetListResponse.setStatus(SnapshotStatus.no_snapshot);
-            tokensFetcher.fetch();
-            assetAddresses = tokensFetcher.getAssetAddressesByPolicyId(snapshotRequest.getTimestamp(), snapshotRequest.getPolicyId());
+            if (tokensFetcher.retrieveAssetAddressesData(System.currentTimeMillis(), snapshotRequest.getPolicyId(), 1)) {
+                assetAddresses = tokensFetcher.getAssetAddressesByPolicyId(snapshotRequest.getTimestamp(), snapshotRequest.getPolicyId());
+            } else {
+                Objects.requireNonNull(cacheManager.getCache("snapshots")).evict(snapshotRequest.getId());
+                return;
+            }
         }
         List<Asset> assets = new ArrayList<>();
         for (io.adabox.snapshotter.model.AssetAddress assetAddress : assetAddresses) {
