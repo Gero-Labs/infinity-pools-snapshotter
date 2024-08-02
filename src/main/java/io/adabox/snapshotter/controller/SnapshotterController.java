@@ -32,7 +32,7 @@ public class SnapshotterController {
     @ApiResponse(responseCode = "500", description = "Unexpected Error", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     @Operation(description = "Get Assets using policy and an optional stake address. There must be a snapshot available for this to succeed.")
     public ResponseEntity<AssetListResponse> assetsByPolicyId(@PathVariable(value = "policy_id")
-                                                              @Schema(description = "Policy Id of the Snapshot", example = "476039a0949cf0b22f6a800f56780184c44533887ca6e821007840c3")
+                                                              @Schema(description = "Policy Id of the Snapshot", example = "83117b5acb702fd086db386d26e83b7de3b19fbfe24c9e96f8f101a3")
                                                               String policyId,
                                                               @RequestParam(value = "stake_address", required = false)
                                                               @Schema(description = "Stake address to filter Response on", example = "stake123456789012345678901234567890123456789012345678901234")
@@ -55,7 +55,7 @@ public class SnapshotterController {
     @ApiResponse(responseCode = "500", description = "Unexpected Error", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     @Operation(description = "Get Assets using policy and epoch and an optional stake address. There must be a snapshot available for this to succeed.")
     public ResponseEntity<Snapshot> policySnapshotByPolicyId(@PathVariable(value = "policy_id")
-                                                             @Schema(description = "Policy Id of the Snapshot", example = "476039a0949cf0b22f6a800f56780184c44533887ca6e821007840c3")
+                                                             @Schema(description = "Policy Id of the Snapshot", example = "83117b5acb702fd086db386d26e83b7de3b19fbfe24c9e96f8f101a3")
                                                              String policyId) {
         Snapshot snapshot = snapshotterService.getPolicySnapshot(policyId);
         if (snapshot == null) {
@@ -69,7 +69,7 @@ public class SnapshotterController {
     @ApiResponse(responseCode = "500", description = "Unexpected Error", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     @Operation(description = "Take snapshot by date")
     public ResponseEntity<Snapshot> postPolicySnapshotByTimestamp(@PathVariable(value = "policy_id")
-                                                                  @Schema(description = "Policy Id to be Snapshotted", example = "476039a0949cf0b22f6a800f56780184c44533887ca6e821007840c3")
+                                                                  @Schema(description = "Policy Id to be Snapshotted", example = "83117b5acb702fd086db386d26e83b7de3b19fbfe24c9e96f8f101a3")
                                                                   String policyId) {
         return ResponseEntity.ok(snapshotterService.createPolicySnapshot(policyId));
     }

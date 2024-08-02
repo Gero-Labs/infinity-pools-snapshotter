@@ -14,9 +14,9 @@ spring:
 snapshotter:
   provider:
     network: mainnet
-    provider-type: blockfrost
-    provider-token: mainnetm36ACcjnFwOPUhthwqO34S3VCHg7wk0d
-  supported-policies: ${SUPPORTED_POLICIES:8e51398904a5d3fc129fbf4f1589701de23c7824d5c90fdb9490e15a}
+    provider-type: koios
+    provider-token: ${KOIOS_API_KEY:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyIjoic3Rha2UxdXk1dmhwaGtoZ2NhNWV5YWw5OW43NHY0YTgybjcybTJ3OHE5dDUwNG5yZzI3YWcwbnY1cXkiLCJ0aWVyIjozLCJleHAiOjE3NDgzMDcxMTd9.RHve7W1iqpDhQRaai4u7Y6bAFZbbUtCfj3fdM5D-zYE}
+  supported-policies: ${SUPPORTED_POLICIES:8e51398904a5d3fc129fbf4f1589701de23c7824d5c90fdb9490e15a,83117b5acb702fd086db386d26e83b7de3b19fbfe24c9e96f8f101a3,2103673b9f5ee43408d78ad02805bb7bb8b2e118ffc9fb5ff81c28d3,2edd9753b85e908ac63c5ae7b3bb013ad871da4a450b5f21a5218c46}
 
 springdoc:
   default-produces-media-type: application/json

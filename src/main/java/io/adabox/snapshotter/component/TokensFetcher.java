@@ -19,7 +19,12 @@ import java.net.SocketTimeoutException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -29,10 +34,12 @@ public class TokensFetcher {
     private final SnapshotterProperties snapshotterProperties;
     private final AssetService assetService;
     private final MultiKeyMap<String, List<io.adabox.snapshotter.model.AssetAddress>> multiKeyMap = new MultiKeyMap<>();
+    private final ExecutorService executorService;
 
     public TokensFetcher(SnapshotterProperties snapshotterProperties, BackendService backendService) {
         this.snapshotterProperties = snapshotterProperties;
         this.assetService = backendService.getAssetService();
+        this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.DAYS)
@@ -53,28 +60,66 @@ public class TokensFetcher {
     public void fetch() {
         log.info("Fetching Tokens Addresses Data ...");
         long time = System.currentTimeMillis();
-        int tryCount = 1;
-        for (String policyId : snapshotterProperties.getSupportedPolicies()) {
-            retrieveAssetAddressesData(time, policyId, tryCount);
+
+        List<CompletableFuture<Void>> futures = snapshotterProperties.getSupportedPolicies().stream()
+                .map(policyId -> CompletableFuture.runAsync(() -> retrieveAssetAddressesData(time, policyId, 1), executorService))
+                .toList();
+
+        CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+
+        try {
+            allOf.get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error while fetching tokens addresses data", e);
         }
+
         log.info("Done Fetching Tokens Addresses Data.");
     }
 
     public boolean retrieveAssetAddressesData(long time, String policyId, int tryCount) {
         try {
             if (tryCount <= MAX_RETRIES) {
+                log.info("Retrieve Policy Assets for Policy Id: {}", policyId);
                 Result<List<PolicyAsset>> policyAssetsResult = assetService.getAllPolicyAssets(policyId);
                 if (!policyAssetsResult.isSuccessful()) {
                     log.error("ERROR: {}", policyAssetsResult.getResponse());
+                    return false;
                 }
                 List<io.adabox.snapshotter.model.AssetAddress> assetAddresses = new ArrayList<>();
-                for (PolicyAsset policyAsset : policyAssetsResult.getValue()) {
-                    Result<List<AssetAddress>> assetAddressesResult = assetService.getAllAssetAddresses(policyAsset.getAsset());
-                    if (!assetAddressesResult.isSuccessful()) {
-                        log.error("ERROR: {}", assetAddressesResult.getResponse());
-                    }
-                    assetAddressesResult.getValue().forEach(assetAddress -> assetAddresses.add(new io.adabox.snapshotter.model.AssetAddress(assetAddress, policyAsset.getAsset())));
-                }
+                log.info("Retrieve Asset Addresses for Policy Id: {}", policyId);
+
+                List<CompletableFuture<Void>> assetFutures = policyAssetsResult.getValue().stream()
+                        .map(policyAsset -> CompletableFuture.runAsync(() -> {
+                            int assetTryCount = 1;
+                            boolean success = false;
+                            while (assetTryCount <= MAX_RETRIES && !success) {
+                                try {
+                                    Result<List<AssetAddress>> assetAddressesResult = assetService.getAllAssetAddresses(policyAsset.getAsset());
+                                    if (!assetAddressesResult.isSuccessful()) {
+                                        log.error("ERROR: {}", assetAddressesResult.getResponse());
+                                    } else {
+                                        assetAddressesResult.getValue().forEach(assetAddress -> assetAddresses.add(new io.adabox.snapshotter.model.AssetAddress(assetAddress, policyAsset.getAsset())));
+                                        success = true;
+                                    }
+                                } catch (ApiException e) {
+                                    if (e.getCause() instanceof SocketTimeoutException) {
+                                        assetTryCount++;
+                                        log.warn("Retrying getAllAssetAddresses {}/{} for asset {} ...", assetTryCount, MAX_RETRIES, policyAsset.getAsset());
+                                    } else {
+                                        log.error("ApiException while retrieving asset addresses", e);
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!success) {
+                                log.error("Failed to retrieve asset addresses for asset {} after {} retries", policyAsset.getAsset(), MAX_RETRIES);
+                            }
+                        }, executorService))
+                        .toList();
+
+                CompletableFuture<Void> allAssets = CompletableFuture.allOf(assetFutures.toArray(new CompletableFuture[0]));
+                allAssets.get(); // Wait for all asset retrievals to complete
+
                 multiKeyMap.put(DateUtils.convertToDateStr(time), policyId, assetAddresses);
                 return true;
             } else {
@@ -84,11 +129,14 @@ public class TokensFetcher {
         } catch (ApiException e) {
             if (e.getCause() instanceof SocketTimeoutException) {
                 tryCount++;
-                log.warn("Retrying retrieveAssetAddressesData {}/{} ...", tryCount,MAX_RETRIES);
+                log.warn("Retrying retrieveAssetAddressesData {}/{} ...", tryCount, MAX_RETRIES);
                 return retrieveAssetAddressesData(time, policyId, tryCount);
             } else {
                 throw new RuntimeException(e);
             }
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error while retrieving asset addresses data", e);
+            return false;
         }
     }
 
