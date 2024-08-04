@@ -4,6 +4,6 @@ WORKDIR /opt
 
 EXPOSE 8080/tcp
 
-COPY target/snapshotter.jar ./snapshotter.jar
+COPY target/infinity-pools-snapshotter.jar ./infinity-pools-snapshotter.jar
 
-ENTRYPOINT ["java", "-jar", "snapshotter.jar"]
+ENTRYPOINT ["java", "-jar", "infinity-pools-snapshotter.jar"]
