@@ -1,6 +1,5 @@
 package io.gerowallet.snapshotter.controller;
 
-import io.adabox.snapshotter.model.*;
 import io.gerowallet.snapshotter.model.*;
 import io.gerowallet.snapshotter.service.SnapshotterService;
 import io.swagger.v3.oas.annotations.Operation;
