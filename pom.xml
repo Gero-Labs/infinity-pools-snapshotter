@@ -8,12 +8,12 @@
         <relativePath/>
     </parent>
 
-    <groupId>io.adabox</groupId>
-    <artifactId>snapshotter</artifactId>
+    <groupId>io.gerowallet</groupId>
+    <artifactId>infinity-pools-snapshotter</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Cardano Snapshotter</description>
+    <description>Cardano InfinityPools Snapshotter</description>
     <url>https://github.com/adabox-aio/snapshotter</url>
 
     <properties>
@@ -21,7 +21,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot.main.class>io.adabox.snapshotter.Main</spring-boot.main.class>
+        <spring-boot.main.class>io.gerowallet.snapshotter.Main</spring-boot.main.class>
         <logzio-logback-appender.version>2.0.0</logzio-logback-appender.version>
         <cardano-client-lib.version>0.5.2-SNAPSHOT</cardano-client-lib.version>
         <lombok.version>1.18.30</lombok.version>

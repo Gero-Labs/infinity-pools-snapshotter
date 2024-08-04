@@ -1,0 +1,25 @@
+<configuration>
+    <!-- Use shutdownHook so that we can close gracefully and finish the log drain -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <appender name="LogzIo" class="io.logz.logback.LogzioLogbackAppender">
+        <token>fTHGiHwIFLEeBCXxgChhkcbFizTdPxgj</token>
+        <logzioType>java</logzioType>
+        <logzioUrl>https://listener-eu.logz.io:8071</logzioUrl>
+        <additionalFields>appName=Snapshotter</additionalFields>
+    </appender>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="io.gerowallet.snapshotter" level="info" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LogzIo"/>
+    </logger>
+
+    <root level="error">
+        <appender-ref ref="LogzIo"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
