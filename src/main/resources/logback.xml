@@ -13,7 +13,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.gerowallet.snapshotter" level="info" additivity="false">
+    <logger name="io.infinitypools.snapshotter" level="info" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="LogzIo"/>
     </logger>
