@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.net.SocketTimeoutException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -69,7 +68,7 @@ public class TokensFetcher {
                     log.error("ERROR: {}", policyAssetsResult.getResponse());
                     return false;
                 }
-                List<io.infinitypools.snapshotter.model.AssetAddress> assetAddresses = new ArrayList<>();
+                ConcurrentLinkedQueue<io.infinitypools.snapshotter.model.AssetAddress> assetAddresses = new ConcurrentLinkedQueue<>();
                 log.info("Retrieve Asset Addresses for Policy Id: {}", policyId);
 
                 List<CompletableFuture<Void>> assetFutures = policyAssetsResult.getValue().stream()
@@ -104,7 +103,7 @@ public class TokensFetcher {
                 CompletableFuture<Void> allAssets = CompletableFuture.allOf(assetFutures.toArray(new CompletableFuture[0]));
                 allAssets.get(); // Wait for all asset retrievals to complete
                 log.info("Retrieved Asset Addresses for Policy Id: {}", policyId);
-                multiKeyMap.put(DateUtils.convertToDateStr(time), policyId, assetAddresses);
+                multiKeyMap.put(DateUtils.convertToDateStr(time), policyId, assetAddresses.stream().toList());
                 return true;
             } else {
                 log.error("retrieveAssetAddressesData - Try Count Exceeded");

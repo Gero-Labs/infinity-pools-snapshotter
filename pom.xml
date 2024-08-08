@@ -11,7 +11,7 @@
     <groupId>io.infinitypools</groupId>
     <artifactId>infinity-pools-snapshotter</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Gero Labs InfinityPools Snapshotter</description>
     <url>https://github.com/Gero-Labs/infinity-pools-snapshotter</url>
