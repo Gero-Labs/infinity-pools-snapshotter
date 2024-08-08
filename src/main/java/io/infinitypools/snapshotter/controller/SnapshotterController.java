@@ -70,7 +70,8 @@ public class SnapshotterController {
     @Operation(description = "Take snapshot by date")
     public ResponseEntity<Snapshot> postPolicySnapshotByTimestamp(@PathVariable(value = "policy_id")
                                                                   @Schema(description = "Policy Id to be Snapshotted", example = "83117b5acb702fd086db386d26e83b7de3b19fbfe24c9e96f8f101a3")
-                                                                  String policyId) {
-        return ResponseEntity.ok(snapshotterService.createPolicySnapshot(policyId));
+                                                                  String policyId,
+                                                                  @RequestParam(value = "force", defaultValue = "false", required = false) boolean force) {
+        return ResponseEntity.ok(snapshotterService.createPolicySnapshot(policyId, force));
     }
 }

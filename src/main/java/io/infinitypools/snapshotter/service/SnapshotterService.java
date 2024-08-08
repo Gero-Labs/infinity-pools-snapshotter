@@ -33,10 +33,10 @@ public class SnapshotterService {
         return Objects.requireNonNull(cacheManager.getCache("snapshots")).get(id, Snapshot.class);
     }
 
-    public Snapshot createPolicySnapshot(String policyId) {
+    public Snapshot createPolicySnapshot(String policyId, boolean force) {
         long timestamp = System.currentTimeMillis();
         String id = UUID.nameUUIDFromBytes(String.valueOf(Pair.of(policyId, DateUtils.convertToDateStr(timestamp)).hashCode()).getBytes(StandardCharsets.UTF_8)).toString();
-        Snapshot snapshot = Objects.requireNonNull(cacheManager.getCache("snapshots")).get(id, Snapshot.class);
+        Snapshot snapshot = force ? null : Objects.requireNonNull(cacheManager.getCache("snapshots")).get(id, Snapshot.class);
         if (snapshot == null) {
             return snapshotRequestPublisher.publishSnapshot(id, policyId, timestamp);
         } else {
